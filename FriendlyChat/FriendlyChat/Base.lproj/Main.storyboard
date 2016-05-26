@@ -207,6 +207,9 @@
                                 <state key="normal" title="Send">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="didSendMessage:" destination="CA1-hN-0Em" eventType="touchUpInside" id="PIU-JC-nHw"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pI-Oz-tkS">
                                 <rect key="frame" x="12" y="471" width="24" height="24"/>
@@ -214,6 +217,9 @@
                                     <constraint firstAttribute="width" constant="24" id="Pc0-00-a3w"/>
                                 </constraints>
                                 <state key="normal" image="ic_add_a_photo"/>
+                                <connections>
+                                    <action selector="didTapAddPhoto:" destination="CA1-hN-0Em" eventType="touchUpInside" id="MCq-Ht-g1l"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -243,6 +249,7 @@
                         <outlet property="freshConfigButton" destination="icF-Q1-KbE" id="J9i-TU-JNw"/>
                         <outlet property="sendButton" destination="rp5-BC-5Mt" id="thM-Fr-GaH"/>
                         <outlet property="tableView" destination="hxg-DZ-1z1" id="cWc-eh-Ggu"/>
+                        <outlet property="textField" destination="nhH-9l-4hJ" id="SrR-ih-YT8"/>
                         <segue destination="BYZ-38-t0r" kind="push" identifier="FPToSignIn" id="UA8-A6-LoB"/>
                     </connections>
                 </viewController>
