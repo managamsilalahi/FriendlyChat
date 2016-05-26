@@ -8,11 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		841AE98A1CF5AE7000560403 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841AE9891CF5AE7000560403 /* AppDelegate.swift */; };
-		841AE98C1CF5AE7000560403 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841AE98B1CF5AE7000560403 /* ViewController.swift */; };
+		841AE98C1CF5AE7000560403 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841AE98B1CF5AE7000560403 /* SignInViewController.swift */; };
 		841AE98F1CF5AE7000560403 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841AE98D1CF5AE7000560403 /* Main.storyboard */; };
 		841AE9911CF5AE7000560403 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 841AE9901CF5AE7000560403 /* Assets.xcassets */; };
 		841AE99D1CF5AEB800560403 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841AE99C1CF5AEB800560403 /* Launch Screen.storyboard */; };
 		841AE99F1CF5B0CE00560403 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 841AE99E1CF5B0CE00560403 /* GoogleService-Info.plist */; };
+		84346D8F1CF692FF00A7B2E3 /* MeasurementHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84346D8E1CF692FF00A7B2E3 /* MeasurementHelper.swift */; };
+		84346D911CF6938900A7B2E3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84346D901CF6938900A7B2E3 /* AppState.swift */; };
+		84346D931CF6946800A7B2E3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84346D921CF6946800A7B2E3 /* Constants.swift */; };
 		D8EDBC8CDF597DFB7AA790F1 /* Pods_FriendlyChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F95167148EDE2195DBB0CE2C /* Pods_FriendlyChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -20,12 +23,15 @@
 		5405CAD6816074107B6EE7BF /* Pods-FriendlyChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendlyChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FriendlyChat/Pods-FriendlyChat.debug.xcconfig"; sourceTree = "<group>"; };
 		841AE9861CF5AE7000560403 /* FriendlyChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendlyChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		841AE9891CF5AE7000560403 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		841AE98B1CF5AE7000560403 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		841AE98B1CF5AE7000560403 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		841AE98E1CF5AE7000560403 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		841AE9901CF5AE7000560403 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		841AE9951CF5AE7000560403 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		841AE99C1CF5AEB800560403 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		841AE99E1CF5B0CE00560403 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		84346D8E1CF692FF00A7B2E3 /* MeasurementHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementHelper.swift; sourceTree = "<group>"; };
+		84346D901CF6938900A7B2E3 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		84346D921CF6946800A7B2E3 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		EA73081FA016A19087616B63 /* Pods-FriendlyChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendlyChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-FriendlyChat/Pods-FriendlyChat.release.xcconfig"; sourceTree = "<group>"; };
 		F95167148EDE2195DBB0CE2C /* Pods_FriendlyChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FriendlyChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -80,7 +86,8 @@
 		841AE9881CF5AE7000560403 /* FriendlyChat */ = {
 			isa = PBXGroup;
 			children = (
-				841AE98B1CF5AE7000560403 /* ViewController.swift */,
+				84346D8D1CF692DD00A7B2E3 /* Helper */,
+				84346D8C1CF690DF00A7B2E3 /* Sign In */,
 				841AE98D1CF5AE7000560403 /* Main.storyboard */,
 				841AE99B1CF5AE8600560403 /* Supported Files */,
 			);
@@ -97,6 +104,24 @@
 				841AE9951CF5AE7000560403 /* Info.plist */,
 			);
 			name = "Supported Files";
+			sourceTree = "<group>";
+		};
+		84346D8C1CF690DF00A7B2E3 /* Sign In */ = {
+			isa = PBXGroup;
+			children = (
+				841AE98B1CF5AE7000560403 /* SignInViewController.swift */,
+			);
+			name = "Sign In";
+			sourceTree = "<group>";
+		};
+		84346D8D1CF692DD00A7B2E3 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				84346D8E1CF692FF00A7B2E3 /* MeasurementHelper.swift */,
+				84346D901CF6938900A7B2E3 /* AppState.swift */,
+				84346D921CF6946800A7B2E3 /* Constants.swift */,
+			);
+			name = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,8 +247,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				841AE98C1CF5AE7000560403 /* ViewController.swift in Sources */,
+				84346D931CF6946800A7B2E3 /* Constants.swift in Sources */,
+				841AE98C1CF5AE7000560403 /* SignInViewController.swift in Sources */,
 				841AE98A1CF5AE7000560403 /* AppDelegate.swift in Sources */,
+				84346D8F1CF692FF00A7B2E3 /* MeasurementHelper.swift in Sources */,
+				84346D911CF6938900A7B2E3 /* AppState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
