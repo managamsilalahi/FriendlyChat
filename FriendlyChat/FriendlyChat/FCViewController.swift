@@ -24,7 +24,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     var ref: FIRDatabaseReference!
     var messages: [FIRDataSnapshot]! = []
-    var msgLength: NSNumber = 10
+    var msgLength: NSNumber = 25
     var storageRef: FIRStorageReference!
     var remoteConfig: FIRRemoteConfig!
     
@@ -75,7 +75,8 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         return messages.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    // Without Firebase Storage
+    /* func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         // Dequeue cell
         let cell = self.tableView.dequeueReusableCellWithIdentifier("messageCell")
@@ -95,6 +96,54 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         return cell!
         
+    } */
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        // Dequeue cell
+        let cell = self.tableView.dequeueReusableCellWithIdentifier("messageCell")
+        
+        // Unpack message from Firebase DataSnapshot
+        let messageSnapshot: FIRDataSnapshot! = self.messages[indexPath.row]
+        let message = messageSnapshot.value as! Dictionary<String, String>
+        let name = message[Constants.MessageFields.name] as String!
+        
+        if let imageUrl = message[Constants.MessageFields.imageUrl] {
+            
+            if imageUrl.hasPrefix("gs://") {
+                FIRStorage.storage().referenceForURL(imageUrl).dataWithMaxSize(INT64_MAX, completion: { (data, error) in
+                    
+                    if let error = error {
+                        print("Error downloading: \(error)")
+                        return
+                    }
+                    
+                    cell?.imageView?.image = UIImage.init(data: data!)
+                    
+                })
+            } else if let url = NSURL(string: imageUrl), data = NSData(contentsOfURL: url) {
+                cell?.imageView?.image = UIImage.init(data: data)
+            }
+            
+            cell?.textLabel?.text = "Sent by: \(name)"
+            
+        } else {
+            
+            let text = message[Constants.MessageFields.text] as String!
+            cell?.textLabel?.text = name + ": " + text
+            cell?.textLabel?.numberOfLines = 0
+            cell?.imageView?.image = UIImage(named: "ic_account_circle")
+            
+            if let photoUrl = message[Constants.MessageFields.photoUrl], url = NSURL(string: photoUrl), data = NSData(contentsOfURL: url) {
+                
+                cell?.imageView?.image = UIImage(data: data)
+                
+            }
+            
+        }
+        
+        return cell!
+        
     }
 
     @IBAction func signOut(sender: UIButton) {
@@ -109,7 +158,18 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     @IBAction func didSendMessage(sender: UIButton) {
-        textFieldShouldReturn(textField)
+        
+        let whiteSpace = NSCharacterSet.whitespaceCharacterSet()
+        
+        if self.textField.text!.stringByTrimmingCharactersInSet(whiteSpace) != "" {
+            
+            // string contains non-whitespace characters
+            textFieldShouldReturn(textField)
+            self.textField.text = ""
+            
+        }
+
+        
     }
     
     
@@ -123,16 +183,15 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     func configureStorage() {
-        
+        self.storageRef = FIRStorage.storage().referenceForURL("gs://friendlychat-e82af.appspot.com")
     }
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
         guard let text = textField.text else { return true }
-        
         let newLength = text.utf16.count + string.utf16.count - range.length
-        
         return newLength <= self.msgLength.integerValue // Bool
+        
     }
     
     func sendMessage(data: [String: String]){
@@ -156,17 +215,16 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     // MARK: - Image Picker
     
-    @IBAction func didTapAddPhoto(sender: UIButton) {
+    @IBAction func didTapAddPhoto(sender: AnyObject) {
         let picker = UIImagePickerController()
         picker.delegate = self
-        
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
             picker.sourceType = .Camera
         } else {
             picker.sourceType = .PhotoLibrary
         }
         
-        presentViewController(picker, animated: true, completion: nil)
+        presentViewController(picker, animated: true, completion:nil)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
@@ -181,6 +239,17 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
             
             let imageFile = contentEditingInput?.fullSizeImageURL
             let filePath = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(NSDate.timeIntervalSinceReferenceDate() * 1000))\(referenceUrl.lastPathComponent!)"
+            let metadata = FIRStorageMetadata()
+            self.storageRef.child(filePath).putFile(imageFile!, metadata: metadata, completion: { (metadata, error) in
+                
+                if let error = error {
+                    print("error upload: \(error.description)")
+                    return
+                }
+                
+                self.sendMessage([Constants.MessageFields.imageUrl: self.storageRef.child((metadata?.path)!).description])
+                
+            })
             
         })
         
