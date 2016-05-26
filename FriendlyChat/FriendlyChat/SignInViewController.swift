@@ -18,6 +18,9 @@ class SignInViewController: UIViewController {
         if let user = FIRAuth.auth()?.currentUser {
             self.signedIn(user)
         }
+        
+        self.emailField.text = self.emailField.text
+        self.passwordField.text = self.passwordField.text
     }
     
     override func viewDidLoad() {
