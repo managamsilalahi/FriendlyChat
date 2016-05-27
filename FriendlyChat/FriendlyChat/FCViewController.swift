@@ -21,6 +21,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     @IBOutlet weak var freshConfigButton: UIButton!
     @IBOutlet weak var crashButton: UIButton!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     var ref: FIRDatabaseReference!
     var messages: [FIRDataSnapshot]! = []
@@ -31,21 +32,35 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     private var _refHandle: FIRDatabaseHandle!
     
     
-    
     // MARK: Life cycle
     override func viewWillAppear(animated: Bool) {
+        
         self.freshConfigButton.hidden = true
         self.crashButton.hidden = true
         
+        //getFirebaseSnapshot()
+
+    }
+    
+    func getFirebaseSnapshot() {
+        
+        self.spinner.startAnimating()
         self.messages.removeAll()
+        self.tableView.beginUpdates()
         
         // Listen for new messsages in the Firebase database
-        _refHandle = self.ref.child("messages").observeEventType(.ChildAdded, withBlock: { (snapshot) in
-            
+        self._refHandle = self.ref.child("messages").observeEventType(.ChildAdded, withBlock: { (snapshot) in
+
             self.messages.append(snapshot)
-            self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.messages.count-1, inSection: 0)], withRowAnimation: .Automatic)
+            //self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.messages.count-1, inSection: 0)], withRowAnimation: .Automatic)
+
+            self.tableView.reloadData()
             
         })
+        
+        self.tableView.endUpdates()
+        self.spinner.stopAnimating()
+        
     }
     
     override func viewDidLoad() {
@@ -58,6 +73,15 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "messageCell")
         fetchConfig()
         configureStorage()
+        
+        // Loading
+        self.spinner.hidesWhenStopped = true
+        self.spinner.center = view.center
+        self.view.addSubview(self.spinner)
+        self.spinner.startAnimating()
+        
+        // Get Firebase Snapshot
+        self.getFirebaseSnapshot()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -162,12 +186,14 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         let whiteSpace = NSCharacterSet.whitespaceCharacterSet()
         
         if self.textField.text!.stringByTrimmingCharactersInSet(whiteSpace) != "" {
-            
             // string contains non-whitespace characters
             textFieldShouldReturn(textField)
             self.textField.text = ""
             
+            
         }
+        
+        
 
         
     }
@@ -203,12 +229,15 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         // Push data to Firebase Database
         self.ref.child("messages").childByAutoId().setValue(mdata)
+        
+        
     }
     
     // UITextViewDelegate protocol methods
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         let data = [Constants.MessageFields.text : textField.text! as String]
         sendMessage(data)
+        
         return true
     }
     
@@ -216,6 +245,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     // MARK: - Image Picker
     
     @IBAction func didTapAddPhoto(sender: AnyObject) {
+        
         let picker = UIImagePickerController()
         picker.delegate = self
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
@@ -224,12 +254,13 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
             picker.sourceType = .PhotoLibrary
         }
         
-        presentViewController(picker, animated: true, completion:nil)
+        self.presentViewController(picker, animated: true, completion:nil)
+        
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
-        picker.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
         
         let referenceUrl = info[UIImagePickerControllerReferenceURL] as! NSURL
         let assets = PHAsset.fetchAssetsWithALAssetURLs([referenceUrl], options: nil)
@@ -249,6 +280,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 
                 self.sendMessage([Constants.MessageFields.imageUrl: self.storageRef.child((metadata?.path)!).description])
                 
+                
             })
             
         })
@@ -257,7 +289,8 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        picker.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func showAlert(title: String, message: String) {

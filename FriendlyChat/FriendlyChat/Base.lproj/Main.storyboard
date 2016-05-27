@@ -185,7 +185,7 @@
                                 <rect key="frame" x="44" y="468" width="210" height="30"/>
                                 <color key="tintColor" red="0.31764705879999999" green="0.6588235294" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                 <connections>
                                     <outlet property="delegate" destination="CA1-hN-0Em" id="Spr-7W-Fg4"/>
                                 </connections>
@@ -248,12 +248,18 @@
                         <outlet property="crashButton" destination="N0t-2s-rfQ" id="GMp-iQ-N0m"/>
                         <outlet property="freshConfigButton" destination="icF-Q1-KbE" id="J9i-TU-JNw"/>
                         <outlet property="sendButton" destination="rp5-BC-5Mt" id="thM-Fr-GaH"/>
+                        <outlet property="spinner" destination="4nK-Hm-hLD" id="wdg-4f-QRM"/>
                         <outlet property="tableView" destination="hxg-DZ-1z1" id="cWc-eh-Ggu"/>
                         <outlet property="textField" destination="nhH-9l-4hJ" id="SrR-ih-YT8"/>
                         <segue destination="BYZ-38-t0r" kind="push" identifier="FPToSignIn" id="UA8-A6-LoB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tht-oX-Gji" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" id="4nK-Hm-hLD">
+                    <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.31764705879999999" green="0.6588235294" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                </activityIndicatorView>
             </objects>
             <point key="canvasLocation" x="1191" y="406"/>
         </scene>
