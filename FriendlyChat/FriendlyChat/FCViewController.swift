@@ -38,7 +38,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     override func viewWillAppear(animated: Bool) {
         
         // self.freshConfigButton.hidden = true
-        self.crashButton.hidden = true
+        // self.crashButton.hidden = true
         
         //getFirebaseSnapshot()
 
@@ -201,10 +201,7 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
             
             
         }
-        
-        
 
-        
     }
     
     
@@ -225,6 +222,9 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     
+    @IBAction func didPressCrash(sender: UIButton) {
+        FIRCrashMessage("Cause Crash button clicked")
+    }
     
     func fetchConfig() {
         var expirationDuration: Double = 3600

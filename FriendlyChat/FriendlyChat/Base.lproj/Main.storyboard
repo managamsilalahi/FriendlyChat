@@ -157,6 +157,9 @@
                                         <state key="normal" title="Crash">
                                             <color key="titleColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="didPressCrash:" destination="CA1-hN-0Em" eventType="touchUpInside" id="Hcd-hQ-o0c"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="icF-Q1-KbE">
                                         <rect key="frame" x="155" y="16" width="88" height="30"/>
