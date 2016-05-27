@@ -10,6 +10,7 @@ import UIKit
 import Photos
 
 import Firebase
+import GoogleMobileAds
 
 class FCViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -25,17 +26,18 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     var ref: FIRDatabaseReference!
     var messages: [FIRDataSnapshot]! = []
-    var msgLength: NSNumber = 25
+    var msgLength: NSNumber = 10
     var storageRef: FIRStorageReference!
     var remoteConfig: FIRRemoteConfig!
-    
+    //let kBannerAdUnitID = "ca-app-pub-6137791063432472/4822980346"
+    let kBannerAdUnitID = "ca-app-pub-6137791063432472/9253179942"
     private var _refHandle: FIRDatabaseHandle!
     
     
     // MARK: Life cycle
     override func viewWillAppear(animated: Bool) {
         
-        self.freshConfigButton.hidden = true
+        // self.freshConfigButton.hidden = true
         self.crashButton.hidden = true
         
         //getFirebaseSnapshot()
@@ -54,12 +56,14 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
             self.messages.append(snapshot)
             //self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.messages.count-1, inSection: 0)], withRowAnimation: .Automatic)
 
-            self.tableView.reloadData()
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+                self.spinner.stopAnimating()
+            })
             
         })
         
         self.tableView.endUpdates()
-        self.spinner.stopAnimating()
         
     }
     
@@ -68,17 +72,22 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         ref = FIRDatabase.database().reference()
         
-        loadAd()
+        remoteConfig = FIRRemoteConfig.remoteConfig()
+        // Create Remote Config Setting to enable developer mode.
+        // Fetching configs from the server is normally limited to 5 requests per hour.
+        // Enabling developer mode allows many more requests to be made per hour, so developers
+        // can test different config values during development.
+        let remoteConfigSettings = FIRRemoteConfigSettings(developerModeEnabled: true)
+        remoteConfig.configSettings = remoteConfigSettings!
         
+        loadAd()
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "messageCell")
         fetchConfig()
         configureStorage()
         
-        // Loading
         self.spinner.hidesWhenStopped = true
-        self.spinner.center = view.center
-        self.view.addSubview(self.spinner)
-        self.spinner.startAnimating()
+        self.spinner.center = self.view.center
+        self.view.addSubview(spinner)
         
         // Get Firebase Snapshot
         self.getFirebaseSnapshot()
@@ -134,6 +143,8 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         if let imageUrl = message[Constants.MessageFields.imageUrl] {
             
+            cell?.textLabel?.text = "Sent by: \(name)"
+
             if imageUrl.hasPrefix("gs://") {
                 FIRStorage.storage().referenceForURL(imageUrl).dataWithMaxSize(INT64_MAX, completion: { (data, error) in
                     
@@ -148,8 +159,6 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
             } else if let url = NSURL(string: imageUrl), data = NSData(contentsOfURL: url) {
                 cell?.imageView?.image = UIImage.init(data: data)
             }
-            
-            cell?.textLabel?.text = "Sent by: \(name)"
             
         } else {
             
@@ -201,10 +210,47 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     // Helper Function
     func loadAd() {
+        let request = GADRequest()
+        request.testDevices = [kGADSimulatorID]
+        
+        self.banner.adUnitID = kBannerAdUnitID
+        self.banner.rootViewController = self
+        self.banner.loadRequest(request)
+        
         
     }
     
+    @IBAction func didPressFreshConfig(sender: UIButton) {
+        self.fetchConfig()
+    }
+    
+    
+    
     func fetchConfig() {
+        var expirationDuration: Double = 3600
+        // If in developer mode cacheExpiration is set to 0 so each fetch will retrieve values from
+        // the server.
+        if self.remoteConfig.configSettings.isDeveloperModeEnabled {
+            expirationDuration = 0
+        }
+        
+        // cacheExpirationSeconds is set to cacheExpiration here, indicating that any previously
+        // fetched and cached config would be considered expired because it would have been fetched
+        // more than cacheExpiration seconds ago. Thus the next fetch would go to the server unless
+        // throttling is in progress. The default expiration duration is 43200 (12 hours).
+        self.remoteConfig.fetchWithExpirationDuration(expirationDuration) { (status, error) in
+            
+            if status == .Success {
+                print("Config fetched!")
+                self.remoteConfig.activateFetched()
+                self.msgLength = self.remoteConfig["friendly_msg_length"].numberValue!
+                print("Friendly msg length config: \(self.msgLength)")
+            } else {
+                print("Config not fetched")
+                print("Error \(error)")
+            }
+            
+        }
         
     }
     
@@ -262,11 +308,14 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         self.dismissViewControllerAnimated(true, completion: nil)
         
+        self.spinner.startAnimating()
+
         let referenceUrl = info[UIImagePickerControllerReferenceURL] as! NSURL
         let assets = PHAsset.fetchAssetsWithALAssetURLs([referenceUrl], options: nil)
         let asset = assets.firstObject
         
         asset?.requestContentEditingInputWithOptions(nil, completionHandler: { (contentEditingInput, info) in
+            
             
             let imageFile = contentEditingInput?.fullSizeImageURL
             let filePath = "\(FIRAuth.auth()?.currentUser?.uid)/\(Int(NSDate.timeIntervalSinceReferenceDate() * 1000))\(referenceUrl.lastPathComponent!)"
@@ -279,7 +328,6 @@ class FCViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 }
                 
                 self.sendMessage([Constants.MessageFields.imageUrl: self.storageRef.child((metadata?.path)!).description])
-                
                 
             })
             

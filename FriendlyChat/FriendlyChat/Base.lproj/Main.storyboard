@@ -161,6 +161,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="icF-Q1-KbE">
                                         <rect key="frame" x="155" y="16" width="88" height="30"/>
                                         <state key="normal" title="Fresh Config"/>
+                                        <connections>
+                                            <action selector="didPressFreshConfig:" destination="CA1-hN-0Em" eventType="touchUpInside" id="eNM-Ae-6q9"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.31764705879999999" green="0.6588235294" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -191,11 +194,11 @@
                                 </connections>
                             </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oY5-XE-aVq" customClass="GADBannerView">
-                                <rect key="frame" x="101" y="523" width="118" height="45"/>
+                                <rect key="frame" x="0.0" y="523" width="320" height="45"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="WqY-Kc-tl9"/>
-                                    <constraint firstAttribute="width" constant="118" id="gVW-mT-yMG"/>
+                                    <constraint firstAttribute="width" constant="320" id="gVW-mT-yMG"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rp5-BC-5Mt">
@@ -248,17 +251,16 @@
                         <outlet property="crashButton" destination="N0t-2s-rfQ" id="GMp-iQ-N0m"/>
                         <outlet property="freshConfigButton" destination="icF-Q1-KbE" id="J9i-TU-JNw"/>
                         <outlet property="sendButton" destination="rp5-BC-5Mt" id="thM-Fr-GaH"/>
-                        <outlet property="spinner" destination="4nK-Hm-hLD" id="wdg-4f-QRM"/>
+                        <outlet property="spinner" destination="9fc-Bf-IC2" id="wBq-dg-Sl6"/>
                         <outlet property="tableView" destination="hxg-DZ-1z1" id="cWc-eh-Ggu"/>
                         <outlet property="textField" destination="nhH-9l-4hJ" id="SrR-ih-YT8"/>
                         <segue destination="BYZ-38-t0r" kind="push" identifier="FPToSignIn" id="UA8-A6-LoB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tht-oX-Gji" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" id="4nK-Hm-hLD">
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" id="9fc-Bf-IC2">
                     <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.31764705879999999" green="0.6588235294" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                 </activityIndicatorView>
             </objects>
             <point key="canvasLocation" x="1191" y="406"/>
